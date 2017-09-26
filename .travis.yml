@@ -1,0 +1,21 @@
+
+language: node_js
+node_js:
+  - "7"
+env:
+  - NODE_ENV=travis
+branches:
+  only:
+    - master
+cache:
+  directories:
+    - node_modules
+services:
+  - docker
+install:
+ - npm install
+after_success:
+ - npm prune --production
+ - docker login sjohndimagehub.azurecr.io -u $AZURE_CR_USER -p $AZURE_CR_PWD
+ - docker build -t sjohndimagehub.azurecr.io/image-store .
+ - docker push sjohndimagehub.azurecr.io/image-store
